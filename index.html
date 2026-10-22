@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Licata Group — Network Biology, University of Rome Tor Vergata</title>
+<link rel="icon" type="image/png" href="img/favicon.png">
+<link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="top">
+  <a class="home" href="#" id="homelink" aria-label="Licata Group, home">
+    <img src="img/licata-tree-green.png" alt="">
+    <span class="name"><b>Licata Group</b><span>Network Biology, University of Rome Tor Vergata</span></span>
+  </a>
+  <nav class="menu" aria-label="Main">
+    <button type="button" id="menubtn" aria-expanded="false" aria-controls="menulist" aria-label="Menu">
+      <span class="burger" aria-hidden="true"><i></i><i></i><i></i></span>
+    </button>
+    <ul id="menulist"></ul>
+  </nav>
+</header>
+
+<main id="home">
+  <svg id="net" aria-label="Site map drawn as a network">
+    <g class="bg" id="bg"></g><g id="mainedges"></g><g class="hub" id="hub" aria-hidden="true"></g><g id="clusters"></g>
+  </svg>
+  <p class="credit">Website created by <b>Alessia Pinto</b> and <b>Pia Nuzzariello</b></p>
+  <p class="hint" id="hint">Hover a node to reveal its neighbours, click to open it, drag it to move it around.</p>
+</main>
+
+<section class="page" id="page" aria-hidden="true">
+  <div class="heroband"><svg class="deco" id="decoHero" aria-hidden="true"></svg>
+    <div class="hero" id="hero"><button type="button" class="back" id="back">Back to network</button><h2 id="ptitle"></h2><p id="plead"></p></div></div>
+  <div class="sheet"><svg class="deco" id="decoSheet" aria-hidden="true"></svg><article id="content"></article>
+    <p class="credit">© 2026 Licata Group · Website created by <b>Alessia Pinto</b> and <b>Pia Nuzzariello</b></p></div>
+</section>
+
+<script src="js/content.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

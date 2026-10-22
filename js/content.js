@@ -28,13 +28,13 @@ const SECTIONS = [
     kids:[
       {label:"PI", kids:[{label:"Luana Licata"}]},
       {label:"Bio-curator", kids:[{label:"Marta Iannuccelli"}]},
-      {label:"Researcher", kids:[{label:"Pia Nuzzariello"}]},
+      {label:"Researcher", kids:[{label:"Pia Francesca Nuzzarello"}]},
       {label:"PhD students", kids:[{label:"Alessia Pinto"}]},
       {label:"Students", kids:[{label:"Adja Khady Ndoye"},{label:"Parnian Omidi"}]},
     ], html:`
         <div class="person"><div class="av">LL</div><div><b>Luana Licata</b><span>Principal Investigator</span></div></div>
     <div class="person"><div class="av">MI</div><div><b>Marta Iannuccelli</b><span>Biocurator</span></div></div>
-    <div class="person"><div class="av">PN</div><div><b>Pia Nuzzariello</b><span>Researcher</span></div></div>
+    <div class="person"><div class="av">PN</div><div><b>Pia Francesca Nuzzarello</b><span>Researcher</span></div></div>
     <div class="person"><div class="av">AP</div><div><b>Alessia Pinto</b><span>PhD student</span></div></div>
     <div class="person"><div class="av">AN</div><div><b>Adja Khady Ndoye</b><span>Master's student</span></div></div>
     <div class="person"><div class="av">PO</div><div><b>Parnian Omidi</b><span>Master's student</span></div></div>

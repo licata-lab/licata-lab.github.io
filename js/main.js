@@ -111,11 +111,21 @@ function layout(){
   hub.core.setAttribute("r",HR); hub.halo.setAttribute("r",HR+9);
   const fs = small?13:Math.round(19*S);
   [hub.t1,hub.t2].forEach((t,i)=>{ t.setAttribute("font-size",fs); t.setAttribute("y", i ? fs*1.05 : -fs*.2); t.setAttribute("x", fs*.07); });
-  const slots=[[-1,-1],[-1,0],[-1,1],[1,1],[1,0],[1,-1]];
+  // organic, slightly asymmetric placement of the main nodes around the centre.
+  // Each value is [x, y] as a fraction of the available half-width / half-height (−1 … 1).
+  // A section in content.js can override its own spot with  pos:[x, y]
+  const DEFAULT_POS={ research:[-.20,-.86], resources:[.55,-.96], news:[.96,-.05],
+                      contact:[.30,.86], publications:[-.90,.96], people:[-.80,-.10] };
+  // on phones the screen is narrow: spread the nodes more sideways so labels don't touch
+  const SMALL_POS={ research:[-.55,-.88], resources:[.60,-.98], news:[.88,-.02],
+                    contact:[.50,.90], publications:[-.62,.98], people:[-.85,-.12] };
+  const ring=i=>{ const a=i/clusters.length*2*Math.PI-Math.PI/2; return [Math.cos(a)*.9, Math.sin(a)*.9]; };
+  const ex = small ? W/2-R0-14 : Math.min(W/2-R0-150, 600);
+  const ey = small ? H/2-R0-104 : Math.min(H/2-R0-50, 360);   // phones: leave room for the hint at the bottom
   clusters.forEach((c,i)=>{
-    const [sx,sy]=slots[i%6], m=c.main;
-    m.x = cx + sx*(colX + (sy===0 ? colX*.08 : 0));
-    m.y = cy + sy*rowY;
+    const m=c.main, [fx,fy]=c.sec.pos||(small?SMALL_POS:DEFAULT_POS)[c.sec.id]||ring(i);
+    m.x = cx + fx*ex;
+    m.y = cy + fy*ey;
     // fan direction: away from the central node, flattened on desktop so it doesn't run into the next row
     const base = Math.atan2((m.y-cy)*(small?1:.25), (m.x-cx));
     const place=(n,ang,dist,R)=>{
@@ -124,15 +134,27 @@ function layout(){
       n.ang=ang;
     };
     m.r=R0; m.ang=base;
-    // first-neighbour arcs get longer when there is room, shorter when there isn't
-    const room=(sx<0 ? m.x : W-m.x) - R0;
-    const D1 = small ? 64 : Math.max(96*S,  Math.min(150*S, room*.34));
-    const D2 = small ? 72 : Math.max(112*S, Math.min(200*S, room*.44));
+    // first neighbours all around the main node, evenly spaced, with the gap facing the centre
+    // so no arc points back at the hub; arc lengths vary a little for an organic look
+    const room=Math.min(m.x, W-m.x, m.y, H-m.y) - R0;
+    const D1 = small ? 62 : Math.max(104*S, Math.min(132*S, room*.9));
+    const D2 = small ? 64 : Math.max(104*S, Math.min(140*S, room*.9));
     c.D1=D1; c.D2=D2;
+    const JIT=[1, 1.2, .88, 1.12, .94, 1.07];             // deterministic "a bit different" lengths
+    const hubAng=Math.atan2(cy-m.y, cx-m.x), n1=m.kids.length, step=2*Math.PI/Math.max(1,n1);
+    // rotate the whole star so that no arc points at the hub nor straight down onto the node's own label
+    const adiff=(x,y)=>{ const d=Math.abs(((x-y)%(2*Math.PI)+3*Math.PI)%(2*Math.PI)-Math.PI); return d; };
+    let rot=0, best=-1;
+    for(let s=0;s<36;s++){ const o=s/36*step;
+      const sc=Math.min(...m.kids.map((_,j)=>{ const a=hubAng+o+j*step; return Math.min(adiff(a,hubAng), adiff(a,Math.PI/2)*1.15); }));
+      if(sc>best){ best=sc; rot=o; } }
     m.kids.forEach((k,j)=>{
-      const a=base+(j-(m.kids.length-1)/2)*(small?.62:.56);
-      place(k,a,D1,R1); k.r=R1;
-      k.kids.forEach((g,q)=>{ place(g,a+(q-(k.kids.length-1)/2)*.5,D2,R2); g.r=R2; });
+      const a=hubAng+rot+j*step;
+      // an arc that points down crosses the node's own label: make it longer so it clears it
+      k.rest=D1*JIT[j%JIT.length]*(adiff(a,Math.PI/2)<.6 ? 1.3 : 1); place(k,a,k.rest,R1); k.r=R1;
+      // second neighbours fan outwards, continuing the direction of their parent
+      k.kids.forEach((g,q)=>{ g.rest=D2*JIT[(j+q+2)%JIT.length];
+        place(g,a+(q-(k.kids.length-1)/2)*.55,g.rest,R2); g.r=R2; });
     });
     c.all.forEach(n=>{ n.core.setAttribute("r",n.r); n.hitc.setAttribute("r",n.r+14); });
   });
@@ -178,7 +200,7 @@ function solve(c, mov, pinned){
   if(!mov.length) return;
   const fixed=[...clusters.map(o=>o.main), hub, ...pinned];
   const PAD=small?14:20;
-  const rest=n=> n.depth===1 ? c.D1 : c.D2;
+  const rest=n=> n.rest || (n.depth===1 ? c.D1 : c.D2);
   const box=n=>{ const ang=Math.atan2(n.y-n.parent.y, n.x-n.parent.x), cs=Math.cos(ang), sn=Math.sin(ang), lw=labelW(n), h=Math.max(n.r,10)+4;
     if(Math.abs(cs)>.35) return cs>0 ? [n.x-n.r-4, n.x+n.r+12+lw, n.y-h, n.y+h] : [n.x-n.r-12-lw, n.x+n.r+4, n.y-h, n.y+h];
     const hw=Math.max(lw/2,n.r)+4;

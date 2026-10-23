@@ -59,8 +59,8 @@ const SECTIONS = [
   { id:"contact", label:"Contact", color:"--c6",
     lead:"Department of Biology, University of Rome Tor Vergata.",
     kids:[
-      {label:"PI", kids:[{label:"luana.licata@uniroma2.it", href:"mailto:luana.licata@uniroma2.it"}]},
-      {label:"Lab members", kids:[{label:"alessia.pinto@uniroma2.it", href:"mailto:alessia.pinto@uniroma2.it"},{label:"pia.nuzzariello@uniroma2.it", href:"mailto:pia.nuzzariello@uniroma2.it"}]},
+      {label:"PI", kids:[{label:"Luana Licata", href:"mailto:luana.licata@uniroma2.it"}]},
+      {label:"Lab members", kids:[{label:"Alessia Pinto", href:"mailto:alessia.pinto@uniroma2.it"},{label:"Pia Francesca Nuzzarello", href:"mailto:nzzprn01@uniroma2.it"}]},
     ], html:`
     <h3>Address</h3>
     <p>Via della Ricerca Scientifica 1<br>00133 Rome, Italy</p>
